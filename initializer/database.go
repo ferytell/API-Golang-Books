@@ -1,6 +1,7 @@
 package initializer
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -15,7 +16,7 @@ func ConnectToDB() {
 	var err error
 
 	dsn := os.Getenv("DB_URL")
-	//os.Getenv("DB_URL")
+	fmt.Println(os.Getenv("DB_URL"))
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {

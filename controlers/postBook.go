@@ -1,24 +1,52 @@
 package controlers
 
 import (
-	"fmt"
-	"net/http"
+	"API-Books/initializer"
+	"API-Books/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CreateBook(ctx *gin.Context) {
-	var newBook Book
 
-	if err := ctx.ShouldBindJSON(&newBook); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
+	// Get data off req body
+
+	var body struct {
+		Body  string
+		Title string
+	}
+
+	ctx.Bind(&body)
+	// Create Post Books
+	post := models.Post{
+		Title: body.Title,
+		Body:  body.Body,
+	}
+
+	result := initializer.DB.Create(&post)
+
+	if result.Error != nil {
+		ctx.Status(400)
 		return
 	}
 
-	newBook.BookId = fmt.Sprintf("c%d", len(BookDatas)+1)
-	BookDatas = append(BookDatas, newBook)
+	// Return It
 
-	ctx.JSON(http.StatusCreated, gin.H{
-		"book": newBook,
+	ctx.JSON(200, gin.H{
+		"post": post,
 	})
+
+	// var newBook Book
+
+	// if err := ctx.ShouldBindJSON(&newBook); err != nil {
+	// 	ctx.AbortWithError(http.StatusBadRequest, err)
+	// 	return
+	// }
+
+	// newBook.BookId = fmt.Sprintf("c%d", len(BookDatas)+1)
+	// BookDatas = append(BookDatas, newBook)
+
+	// ctx.JSON(http.StatusCreated, gin.H{
+	// 	"book": newBook,
+	// })
 }

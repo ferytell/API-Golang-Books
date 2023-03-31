@@ -1,45 +1,54 @@
 package controlers
 
 import (
-	"fmt"
-	"net/http"
+	"API-Books/initializer"
+	"API-Books/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 func DeleteBook(ctx *gin.Context) {
-	bookId := ctx.Param("bookId")
-	condition := false
-	var bookIndex int
+	// Get id
+	id := ctx.Param("id")
 
-	for i, book := range BookDatas {
-		if bookId == book.BookId {
-			condition = true
-			bookIndex = i
-			break
-		}
-	}
+	// Delete Data
+	initializer.DB.Delete(&models.Post{}, id)
 
-	if !condition {
-		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error_status":  "Data Noot Found",
-			"error_message": fmt.Sprintf("book with id %v not found", bookId),
-		})
-		return
-	}
+	// Response
+	ctx.Status(200)
 
-	copy(BookDatas[bookIndex:], BookDatas[bookIndex+1:])
-	BookDatas[len(BookDatas)-1] = Book{}
-	BookDatas = BookDatas[:len(BookDatas)-1]
+	// 	bookId := ctx.Param("bookId")
+	// 	condition := false
+	// 	var bookIndex int
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("book with id %v has been deleted", bookId),
-	})
-}
+	// 	for i, book := range BookDatas {
+	// 		if bookId == book.BookId {
+	// 			condition = true
+	// 			bookIndex = i
+	// 			break
+	// 		}
+	// 	}
 
-func TestDel(ctx *gin.Context) {
-	bookId := ctx.Param("bookId")
-	ctx.JSON(200, gin.H{
-		"message": fmt.Sprintf("book with id %v has been deleted", bookId),
-	})
+	// 	if !condition {
+	// 		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+	// 			"error_status":  "Data Noot Found",
+	// 			"error_message": fmt.Sprintf("book with id %v not found", bookId),
+	// 		})
+	// 		return
+	// 	}
+
+	// 	copy(BookDatas[bookIndex:], BookDatas[bookIndex+1:])
+	// 	BookDatas[len(BookDatas)-1] = Book{}
+	// 	BookDatas = BookDatas[:len(BookDatas)-1]
+
+	// 	ctx.JSON(http.StatusOK, gin.H{
+	// 		"message": fmt.Sprintf("book with id %v has been deleted", bookId),
+	// 	})
+	// }
+
+	// func TestDel(ctx *gin.Context) {
+	// 	bookId := ctx.Param("bookId")
+	// 	ctx.JSON(200, gin.H{
+	// 		"message": fmt.Sprintf("book with id %v has been deleted", bookId),
+	// 	})
 }
