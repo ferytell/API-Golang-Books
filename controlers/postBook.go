@@ -12,15 +12,19 @@ func CreateBook(ctx *gin.Context) {
 	// Get data off req body
 
 	var body struct {
-		Body  string
-		Title string
+		Title       string
+		Author      string
+		Description string
+		Body        string
 	}
 
 	ctx.Bind(&body)
 	// Create Post Books
 	post := models.Post{
-		Title: body.Title,
-		Body:  body.Body,
+		Title:       body.Title,
+		Author:      body.Author,
+		Description: body.Description,
+		Body:        body.Body,
 	}
 
 	result := initializer.DB.Create(&post)

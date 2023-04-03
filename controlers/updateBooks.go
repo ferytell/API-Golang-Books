@@ -15,8 +15,10 @@ func UpdateBook(ctx *gin.Context) {
 	// Get Data off requested Body
 
 	var body struct {
-		Body  string
-		Title string
+		Title       string
+		Author      string
+		Description string
+		Body        string
 	}
 
 	ctx.Bind(&body)
@@ -29,8 +31,10 @@ func UpdateBook(ctx *gin.Context) {
 	// Update the Database
 
 	initializer.DB.Model(&post).Updates(models.Post{
-		Title: body.Title,
-		Body:  body.Body,
+		Title:       body.Title,
+		Author:      body.Author,
+		Description: body.Description,
+		Body:        body.Body,
 	})
 
 	// Response

@@ -9,6 +9,8 @@ import (
 func StartServer() *gin.Engine {
 	router := gin.Default()
 
+	router.POST("/signup", controlers.SignUp)
+
 	router.GET("/ping", controlers.Hellow)
 
 	router.GET("/books", controlers.GetAllBooks)
