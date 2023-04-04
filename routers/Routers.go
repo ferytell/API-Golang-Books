@@ -2,6 +2,7 @@ package routers
 
 import (
 	"API-Books/controlers"
+	"API-Books/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,6 +11,8 @@ func StartServer() *gin.Engine {
 	router := gin.Default()
 
 	router.POST("/signup", controlers.SignUp)
+	router.POST("/login", controlers.Login)
+	router.GET("/validate", middleware.RequireAuth, controlers.Validate)
 
 	router.GET("/ping", controlers.Hellow)
 
