@@ -16,6 +16,7 @@ func SignUp(ctx *gin.Context) {
 	// Get Email
 
 	var body struct {
+		Name     string
 		Email    string
 		Password string
 	}
@@ -39,6 +40,7 @@ func SignUp(ctx *gin.Context) {
 	}
 	// Create the user
 	user := models.User{
+		Name:     body.Name,
 		Email:    body.Email,
 		Password: string(hash),
 	}
@@ -111,15 +113,26 @@ func Login(ctx *gin.Context) {
 
 	// send it Back
 	ctx.SetSameSite(http.SameSiteLaxMode)
-	ctx.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
-	ctx.JSON(http.StatusOK, gin.H{})
+	ctx.SetCookie("Authorization", tokenString, 3600*24, "", "", false, true)
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "succes",
+	})
 }
 
 func Validate(ctx *gin.Context) {
 
-	user, _ := ctx.Get("user")
+	user, _ := ctx.Get("User")
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": user,
+	})
+}
+
+func Logout(ctx *gin.Context) {
+	// set expiration time to a past time
+	ctx.SetCookie("Authorization", "", -1, "/", "", false, true)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Successfully logged out",
 	})
 }
