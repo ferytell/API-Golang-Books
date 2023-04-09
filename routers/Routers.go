@@ -12,6 +12,10 @@ func StartServer() *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS
+	router.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Next()
+	})
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:3000"}
 	router.Use(cors.New(config))

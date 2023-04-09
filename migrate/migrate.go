@@ -13,4 +13,8 @@ func init() {
 func main() {
 	initializer.DB.AutoMigrate(&models.Post{})
 	initializer.DB.AutoMigrate(&models.User{})
+	initializer.DB.AutoMigrate(&models.Post{})
+	initializer.DB.AutoMigrate(&models.Comment{})
+	initializer.DB.AutoMigrate(&models.Photo{})
+	initializer.DB.AutoMigrate(&models.SocialMedia{})
 }
