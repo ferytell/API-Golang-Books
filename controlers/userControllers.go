@@ -13,21 +13,35 @@ import (
 )
 
 func SignUp(ctx *gin.Context) {
-	// Get Email
-
 	var body struct {
 		Name     string
 		Email    string
 		Password string
+		Age      int
 	}
 
 	if ctx.Bind(&body) != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to read body",
 		})
-
 		return
 	}
+
+	// Validate the request Body
+
+	user := &models.User{
+		Name:     body.Name,
+		Email:    body.Email,
+		Password: body.Password,
+		Age:      body.Age,
+	}
+	if err := user.Validate(); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	// Hash The Password
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
@@ -39,14 +53,8 @@ func SignUp(ctx *gin.Context) {
 		return
 	}
 	// Create the user
-	user := models.User{
-		Name:     body.Name,
-		Email:    body.Email,
-		Password: string(hash),
-	}
-	result := initializer.DB.Create(&user)
-
-	if result.Error != nil {
+	user.Password = string(hash)
+	if err := initializer.DB.Create(user).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to create user",
 		})
@@ -54,24 +62,24 @@ func SignUp(ctx *gin.Context) {
 	}
 	// respose
 
-	ctx.JSON(http.StatusOK, gin.H{})
+	ctx.JSON(http.StatusOK, gin.H{"message": "User created Sucessfully"})
 
 }
 
 func Login(ctx *gin.Context) {
 	// Get Email and Pass off req body
 	var body struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Email    string `json:"email" binding:"required,email"`
+		Password string `json:"password" binding:"required"`
 	}
 
 	if ctx.Bind(&body) != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to read body",
 		})
-
 		return
 	}
+
 	// Look up requested user
 	var user models.User
 	initializer.DB.First(&user, "email = ?", body.Email)
