@@ -1,6 +1,8 @@
 package controlers
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,6 +13,8 @@ type Book struct {
 	Title       string `json:"title"`
 	Author      string `json:"author"`
 	Description string `json:"desc"`
+	Created     time.Time
+	Updated     time.Time
 }
 
 func Hellow(ctx *gin.Context) {

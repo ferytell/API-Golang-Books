@@ -3,6 +3,7 @@ package controlers
 import (
 	"API-Books/initializer"
 	"API-Books/models"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,10 +16,11 @@ func UpdateBook(ctx *gin.Context) {
 	// Get Data off requested Body
 
 	var body struct {
-		Title       string
-		Author      string
-		Description string
-		Body        string
+		Id      uint
+		Title   string
+		Author  string
+		Created time.Time
+		Updated time.Time
 	}
 
 	ctx.Bind(&body)
@@ -31,10 +33,11 @@ func UpdateBook(ctx *gin.Context) {
 	// Update the Database
 
 	initializer.DB.Model(&post).Updates(models.Post{
-		Title:       body.Title,
-		Author:      body.Author,
-		Description: body.Description,
-		Body:        body.Body,
+		Id:        body.Id,
+		Title:     body.Title,
+		Author:    body.Author,
+		CreatedAt: body.Created,
+		UpdatedAt: body.Updated,
 	})
 
 	// Response

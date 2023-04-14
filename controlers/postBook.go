@@ -3,6 +3,7 @@ package controlers
 import (
 	"API-Books/initializer"
 	"API-Books/models"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,19 +13,19 @@ func CreateBook(ctx *gin.Context) {
 	// Get data off req body
 
 	var body struct {
-		Title       string
-		Author      string
-		Description string
-		Body        string
+		Title   string
+		Author  string
+		Created time.Time
+		Updated time.Time
 	}
 
 	ctx.Bind(&body)
 	// Create Post Books
 	post := models.Post{
-		Title:       body.Title,
-		Author:      body.Author,
-		Description: body.Description,
-		Body:        body.Body,
+		Title:     body.Title,
+		Author:    body.Author,
+		CreatedAt: body.Created,
+		//UpdatedAt: body.Updated
 	}
 
 	result := initializer.DB.Create(&post)

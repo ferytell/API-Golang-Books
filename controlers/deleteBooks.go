@@ -15,8 +15,9 @@ func DeleteBook(ctx *gin.Context) {
 	initializer.DB.Delete(&models.Post{}, id)
 
 	// Response
-	ctx.Status(200)
-
+	ctx.JSON(200, gin.H{
+		"message": "Book deleted succesfully",
+	})
 	// 	bookId := ctx.Param("bookId")
 	// 	condition := false
 	// 	var bookIndex int

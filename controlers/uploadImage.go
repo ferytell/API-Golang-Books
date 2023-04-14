@@ -2,34 +2,102 @@ package controlers
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 	"os"
 
-	"github.com/azer/go-flickr"
+	"github.com/codedius/imagekit-go"
+	"github.com/gin-gonic/gin"
 )
 
-func UploadToFlickr(imagePath string) (string, error) {
-	// Create a new Flickr client with your API key and secret
-	client := flickr.NewFlickrClient(os.Getenv("FLICKR_API_KEY"), os.Getenv("FLICKR_API_SECRET"))
+func UploadImage(ctx *gin.Context) {
+	// Replace with your own API keys
+	publicKey := os.Getenv("IMAGEKITPUBLICKEY")
+	privateKey := os.Getenv("IMAGEKITPRIVATEKEY")
 
-	// Authenticate with Flickr
-	err := client.Authenticate(flickr.PermissionWrite)
-	if err != nil {
-		return "", fmt.Errorf("failed to authenticate with Flickr: %w", err)
+	opts := imagekit.Options{
+		PublicKey:  publicKey,
+		PrivateKey: privateKey,
 	}
 
-	// Upload the image to Flickr
-	photoID, err := client.UploadPhoto(context.Background(), imagePath, "")
+	// Create a new ImageKit client
+	client, err := imagekit.NewClient(&opts)
 	if err != nil {
-		return "", fmt.Errorf("failed to upload photo to Flickr: %w", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": "fail to create client imege",
+		})
 	}
 
-	// Get the URL of the uploaded photo
-	photoInfo, err := client.GetPhotoInfo(context.Background(), photoID)
+	// Open the image file to upload
+	file, err := os.Open("image.jpg")
 	if err != nil {
-		return "", fmt.Errorf("failed to get photo info from Flickr: %w", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to open image file",
+		})
+		return
 	}
-	url := photoInfo.URL()
+	defer file.Close()
 
-	return url, nil
+	// Upload the image to ImageKit
+	uploadParams := imagekit.UploadRequest{
+		File:              file,
+		FileName:          "image.jpg",
+		UseUniqueFileName: false,
+		Tags:              []string{"go", "image"},
+		Folder:            "/",
+		IsPrivateFile:     false,
+	}
+
+	c := context.Background()
+	uploadResult, err := client.Upload.ServerUpload(c, &uploadParams)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to upload image",
+		})
+		return
+	}
+	// Return the URL of the uploaded image as a JSON response
+	ctx.JSON(http.StatusOK, gin.H{
+		"url": uploadResult.URL,
+	})
 }
+
+// import (
+// 	"fmt"
+// 	"os"
+
+// 	"github.com/koffeinsource/go-imgur/imgur"
+// )
+
+// func UploadImage() {
+// 	// Load the client ID and secret from environment variables
+// 	clientID := os.Getenv("IMGUR_CLIENT_ID")
+// 	clientSecret := os.Getenv("IMGUR_CLIENT_SECRET")
+
+// 	// Create a new Imgur client
+// 	client, err := imgur.NewClient(&imgur.Auth{
+// 		ClientID:     clientID,
+// 		ClientSecret: clientSecret,
+// 	})
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+
+// 	// Open the image file to upload
+// 	file, err := os.Open("image.jpg")
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+// 	defer file.Close()
+
+// 	// Upload the image to Imgur
+// 	response, err := client.UploadFromReader(file)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+
+// 	// Print the URL of the uploaded image
+// 	fmt.Println(response.Link)
+// }

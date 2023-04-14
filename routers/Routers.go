@@ -25,6 +25,8 @@ func StartServer() *gin.Engine {
 	router.GET("/api/validate", middleware.RequireAuth, controlers.Validate)
 	router.POST("/api/logout", controlers.Logout)
 
+	router.POST("/api/upload", controlers.UploadImage)
+
 	router.GET("/api/ping", controlers.Hellow)
 
 	router.GET("/api/books", controlers.GetAllBooks)

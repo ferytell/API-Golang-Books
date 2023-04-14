@@ -9,10 +9,13 @@ import (
 
 type Post struct {
 	gorm.Model
-	Title       string
-	Author      string
-	Description string
-	Body        string
+	Id          uint   `gorm:"primaryKey"`
+	Title       string `json:"name_book"`
+	Author      string `json:"author"`
+	Description string `json:"desc"`
+	Body        string `json:"body"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type Photo struct {
