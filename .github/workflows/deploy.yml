@@ -21,8 +21,8 @@ jobs:
 
       - name: Deploy binary
         run: |
-          sudo cp ./app /home/ferytell/API-Golang-Books/app
-          sudo chown ferytell:ferytell /home/ferytell/API-Golang-Books/app
+          cp ./app /home/ferytell/API-Golang-Books/app
+          chown ferytell:ferytell /home/ferytell/API-Golang-Books/app
 
       - name: Restart service
         run: |
