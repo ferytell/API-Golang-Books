@@ -19,6 +19,9 @@ jobs:
       - name: Build app
         run: go build -o app .
 
+      - name: Debug whoami
+        run: whoami
+
       - name: Deploy binary
         run: |
           cp ./app /home/ferytell/API-Golang-Books/app
