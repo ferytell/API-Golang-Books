@@ -24,10 +24,11 @@ jobs:
 
       - name: Deploy binary
         run: |
-          sudo -n systemctl stop api-books
+          sudo -n /usr/bin/systemctl stop api-books
           cp ./app /home/ferytell/API-Golang-Books/app
-          sudo -n systemctl start api-books
+          sudo -n /usr/bin/systemctl start api-books
       - name: Restart service
         run: |
-          sudo systemctl restart api-books
-          sudo systemctl status api-books --no-pager -l
+          sudo -n /usr/bin/systemctl stop api-books
+          sudo -n /usr/bin/systemctl restart api-books
+          sudo -n /usr/bin/systemctl status api-books --no-pager -l
