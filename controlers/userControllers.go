@@ -120,8 +120,19 @@ func Login(ctx *gin.Context) {
 	}
 
 	// send it Back
-	ctx.SetSameSite(http.SameSiteLaxMode)
-	ctx.SetCookie("Authorization", tokenString, 3600*24, "", "", false, true)
+	// ctx.SetSameSite(http.SameSiteLaxMode)
+	// ctx.SetCookie("Authorization", tokenString, 3600*24, "", "", false, true)
+	ctx.SetSameSite(http.SameSiteNoneMode)
+	ctx.SetCookie(
+    "Authorization",
+    tokenString,
+    3600*24*10,   // 10 day
+    "/",       // path
+    "golangbook.ferytell.site", // domain (important!)
+    true,      // secure (must be true for SameSite=None)
+    true,      // httpOnly
+)
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "succes",
 	})
@@ -138,7 +149,9 @@ func Validate(ctx *gin.Context) {
 
 func Logout(ctx *gin.Context) {
 	// set expiration time to a past time
-	ctx.SetCookie("Authorization", "", -1, "/", "", false, true)
+	//ctx.SetCookie("Authorization", "", -1, "/", "", false, true)
+	ctx.SetCookie("Authorization", "", -1, "/", "golangbook.ferytell.site", true, true)
+
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": "Successfully logged out",
