@@ -17,4 +17,9 @@ func main() {
 	initializer.DB.AutoMigrate(&models.Comment{})
 	initializer.DB.AutoMigrate(&models.Photo{})
 	initializer.DB.AutoMigrate(&models.SocialMedia{})
+	initializer.DB.AutoMigrate(&models.Villager{})
+	initializer.DB.AutoMigrate(&models.Infaq{})
+	initializer.DB.AutoMigrate(&models.Loan{})
+	initializer.DB.AutoMigrate(&models.Repayment{})
+	initializer.DB.AutoMigrate(&models.Fund{})
 }

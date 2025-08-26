@@ -16,15 +16,6 @@ type User struct {
 	Age      int    `json:"age" validate:"min=8"`
 }
 
-// func Validate(u *User) error {
-// 	return nil
-// }
-
-// func (u *User) Validate() error {
-// 	validate := validator.New()
-// 	err := validate.Struct(u)
-// 	return err
-// }
 
 func (u *User) Validate() error {
 	validate := validator.New()

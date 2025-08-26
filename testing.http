@@ -2,3 +2,84 @@ GET http://localhost:8080/api/ping
 
 ###
 
+GET http://localhost:8080/api/books
+
+###
+POST http://localhost:8080/api/signup HTTP/1.1
+Content-Type: application/json
+
+{
+"Name": "John Doe",
+"Email": "johndoe@mail.com",
+"Password": "passwod123",
+"Age": 30
+}
+
+###
+POST http://localhost:8080/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+"Email": "johndoe@mail.com",
+"Password": "passwod123"
+}   
+###
+POST http://localhost:8080/api/logout HTTP/1.1
+Authorization Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTg0Njg1NjEsInN1YiI6MX0.A6-VvJxlRqcP2or_Gtzpx2ndeaAGCehxAUHv4ldyu3A
+Content-Type: application/json
+
+{}
+
+###
+GET http://localhost:8080/api/validate HTTP/1.1
+Authorization Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTg0Njg1NjEsInN1YiI6MX0.A6-VvJxlRqcP2or_Gtzpx2ndeaAGCehxAUHv4ldyu3A
+Content-Type: application/json
+###
+GET http://localhost:8080/api/books HTTP/1.1
+Authorization Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTg0Njg1NjEsInN1YiI6MX0.A6-VvJxlRqcP2or_Gtzpx2ndeaAGCehxAUHv4ldyu3A
+Content-Type: application/json
+
+###
+POST http://localhost:8080/api/books HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTg0Njg1NjEsInN1YiI6MX0.A6-VvJxlRqcP2or_Gtzpx2ndeaAGCehxAUHv4ldyu3A
+Content-Type: application/json
+
+{
+    "Title": "The Go Programming Language",
+    "Author": "Alan A. A. Donovan, Brian W. Kernighan",
+    "Description": "An introduction to the Go programming language.",
+    "Body": "Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.",
+}
+
+
+###
+###
+###
+###
+###
+
+GET https://api-golang-books.onrender.com/api/ping
+
+###
+
+GET https://api-golang-books.onrender.com/api/books
+
+##
+
+
+
+
+
+    
+    router.POST("/api/signup", controlers.SignUp)
+	router.POST("/api/login", controlers.Login)
+	router.GET("/api/validate", middleware.RequireAuth, controlers.Validate)
+	router.POST("/api/logout", controlers.Logout)
+
+	router.GET("/api/ping", controlers.Hellow)
+
+	router.GET("/api/books", controlers.GetAllBooks)
+	router.GET("/api/books/:id", controlers.GetBook)
+	router.POST("/api/books", controlers.CreateBook)
+	router.PUT("/api/books/:id", controlers.UpdateBook)
+	router.DELETE("/api/books/:id", controlers.DeleteBook)

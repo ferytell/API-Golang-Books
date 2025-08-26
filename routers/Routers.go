@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"API-Books/controlers"
+	"API-Books/controllers"
 	"API-Books/middleware"
 
 	"github.com/gin-contrib/cors"
@@ -19,31 +19,26 @@ func StartServer() *gin.Engine {
 	}
 	router.Use(cors.New(config))
 
+	router.GET("/api/ping", controllers.Hellow)
+	// User Auth Routes
+	router.POST("/api/signup", controllers.SignUp)
+	router.POST("/api/login", controllers.Login)
+	router.GET("/api/validate", middleware.RequireAuth, controllers.Validate)
+	router.POST("/api/logout", controllers.Logout)
 
-	// Enable CORS
-	// router.Use(func(c *gin.Context) {
-	// 	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-	// 	c.Next()
-	// })
-	// config := cors.DefaultConfig()
-	// config.AllowOrigins = []string{"http://localhost:3000", "https://ferytell.github.io"}
+	// Books Routes
+	router.GET("/api/books", controllers.GetAllBooks)
+	router.GET("/api/books/:id", controllers.GetBook)
+	router.POST("/api/books", controllers.CreateBook)
+	router.PUT("/api/books/:id", controllers.UpdateBook)
+	router.DELETE("/api/books/:id", controllers.DeleteBook)
 
-	// router.Use(cors.New(config))
-
-	router.POST("/api/signup", controlers.SignUp)
-	router.POST("/api/login", controlers.Login)
-	router.GET("/api/validate", middleware.RequireAuth, controlers.Validate)
-	router.POST("/api/logout", controlers.Logout)
-
-	router.GET("/api/ping", controlers.Hellow)
-
-	router.GET("/api/books", controlers.GetAllBooks)
-	router.GET("/api/books/:id", controlers.GetBook)
-	router.POST("/api/books", controlers.CreateBook)
-	router.PUT("/api/books/:id", controlers.UpdateBook)
-	router.DELETE("/api/books/:id", controlers.DeleteBook)
-
-	//router.DELETE("/books", controlers.TestDel)
+	//Villager Routes
+	router.POST("/api/villagers", controllers.CreateVillager)
+	router.GET("/api/villagers", controllers.GetVillagers)
+	router.GET("/api/villagers/:id", controllers.GetVillager)
+	router.PUT("/api/villagers/:id", controllers.UpdateVillager)
+	router.DELETE("/api/villagers/:id", controllers.DeleteVillager)
 
 	return router
 }
