@@ -38,7 +38,6 @@ func StartServer() *gin.Engine {
 	router.GET("/api/villagers", controllers.GetVillagers)
 	router.GET("/api/villagers/:id", controllers.GetVillager)
 	router.PUT("/api/villagers/:id", controllers.UpdateVillager)
-	router.GET("/api/villagers/:id/loans", controllers.GetVillagersWithLoans)
 	router.GET("/api/villagers/:id/loans", controllers.GetVillagerLoans)
 	router.DELETE("/api/villagers/:id", controllers.DeleteVillager)
 	
