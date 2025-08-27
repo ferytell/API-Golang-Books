@@ -1,4 +1,153 @@
+basePath: /
+definitions:
+  models.Villager:
+    type: object
+host: localhost:8080
 info:
   contact: {}
-paths: {}
+  description: API for managing villagers, donations, loans, and repayments.
+  title: UEM Syariah API
+  version: "1.0"
+paths:
+  /villagers:
+    get:
+      description: Retrieve a list of all villagers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Villager'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all villagers
+      tags:
+      - villagers
+    post:
+      consumes:
+      - application/json
+      description: Add a villager with name, family head, and neighborhood
+      parameters:
+      - description: Villager Data
+        in: body
+        name: villager
+        required: true
+        schema:
+          $ref: '#/definitions/models.Villager'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Villager'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new villager
+      tags:
+      - villagers
+  /villagers/{id}:
+    delete:
+      description: Remove a villager by ID
+      parameters:
+      - description: Villager ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a villager
+      tags:
+      - villagers
+    get:
+      description: Retrieve a single villager by their ID
+      parameters:
+      - description: Villager ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Villager'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a villager by ID
+      tags:
+      - villagers
+    put:
+      consumes:
+      - application/json
+      description: Update villager details by ID
+      parameters:
+      - description: Villager ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Villager Data
+        in: body
+        name: villager
+        required: true
+        schema:
+          $ref: '#/definitions/models.Villager'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Villager'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a villager
+      tags:
+      - villagers
 swagger: "2.0"

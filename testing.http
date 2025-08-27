@@ -53,6 +53,14 @@ Content-Type: application/json
 
 
 ###
+POST  http://localhost:8080/api/villagers HTTP/1.1
+Content-Type: application/json
+
+{
+	"name": "Bi Sari",
+	"family_head_name": "Sari",
+	"neighborhood_id": "1"
+}
 ###
 ###
 ###

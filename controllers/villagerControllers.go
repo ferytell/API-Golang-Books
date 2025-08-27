@@ -34,7 +34,14 @@ func CreateVillager(ctx *gin.Context) {
     ctx.JSON(http.StatusOK, body)
 }
 
-// Get all villagers
+// GetVillagers godoc
+// @Summary Get all villagers
+// @Description Retrieve a list of all villagers
+// @Tags villagers
+// @Produce json
+// @Success 200 {array} models.Villager
+// @Failure 500 {object} map[string]string
+// @Router /villagers [get]
 func GetVillagers(ctx *gin.Context) {
     var villagers []models.Villager
     if err := initializer.DB.Find(&villagers).Error; err != nil {
@@ -45,7 +52,15 @@ func GetVillagers(ctx *gin.Context) {
     ctx.JSON(http.StatusOK, villagers)
 }
 
-// Get villager by ID
+// GetVillagerById godoc
+// @Summary Get a villager by ID
+// @Description Retrieve a single villager by their ID
+// @Tags villagers
+// @Produce json
+// @Param id path int true "Villager ID"
+// @Success 200 {object} models.Villager
+// @Failure 404 {object} map[string]string
+// @Router /villagers/{id} [get]
 func GetVillager(ctx *gin.Context) {
     id := ctx.Param("id")
     var villager models.Villager
@@ -58,7 +73,18 @@ func GetVillager(ctx *gin.Context) {
     ctx.JSON(http.StatusOK, villager)
 }
 
-// Update villager
+// UpdateVillager godoc
+// @Summary Update a villager
+// @Description Update villager details by ID
+// @Tags villagers
+// @Accept json
+// @Produce json
+// @Param id path int true "Villager ID"
+// @Param villager body models.Villager true "Updated Villager Data"
+// @Success 200 {object} models.Villager
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /villagers/{id} [put]
 func UpdateVillager(ctx *gin.Context) {
     id := ctx.Param("id")
     var villager models.Villager
@@ -86,7 +112,15 @@ func UpdateVillager(ctx *gin.Context) {
     ctx.JSON(http.StatusOK, villager)
 }
 
-// Delete villager
+// DeleteVillager godoc
+// @Summary Delete a villager
+// @Description Remove a villager by ID
+// @Tags villagers
+// @Param id path int true "Villager ID"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /villagers/{id} [delete]
 func DeleteVillager(ctx *gin.Context) {
     id := ctx.Param("id")
     if err := initializer.DB.Delete(&models.Villager{}, id).Error; err != nil {
@@ -95,4 +129,23 @@ func DeleteVillager(ctx *gin.Context) {
     }
 
     ctx.JSON(http.StatusOK, gin.H{"message": "Villager deleted"})
+}
+
+// GetVillagerLoans godoc
+// @Summary Get loans for a specific villager
+// @Description Retrieve all loans associated with a villager by their ID
+// @Tags villagers
+// @Produce json
+// @Param id path int true "Villager ID"
+// @Success 200 {array} models.Loan
+// @Failure 404 {object} map[string]string
+// @Router /villagers/{id}/loans [get]
+
+func GetVillagersWithLoans(ctx *gin.Context) {
+    var villagers []models.Villager
+    if err := initializer.DB.Preload("Loans").Find(&villagers).Error; err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch"})
+        return
+    }
+    ctx.JSON(http.StatusOK, villagers)
 }
