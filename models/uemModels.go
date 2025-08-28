@@ -20,7 +20,7 @@ type Infaq struct {
     gorm.Model
     ID             uint      `json:"id" gorm:"primaryKey"`
     VillagerID *uint     `json:"villager_id"` // who donated
-    NeighborhoodID uint      `json:"neighborhood_id" gorm:"not null"`
+    NeighborhoodID string      `json:"neighborhood_id" gorm:"not null"`
     Amount     float64 `json:"amount" validate:"required"`
     DonatedAt      time.Time `json:"donated_at"`
     CollectedAt time.Time `json:"collected_at"`

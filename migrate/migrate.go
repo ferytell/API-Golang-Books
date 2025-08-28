@@ -23,4 +23,8 @@ func main() {
 	initializer.DB.AutoMigrate(&models.LoanPayment{})
 	initializer.DB.AutoMigrate(&models.Repayment{})
 	initializer.DB.AutoMigrate(&models.Fund{})
+	initializer.DB.AutoMigrate(&models.DonationCut{})
+	initializer.DB.AutoMigrate(&models.Committee{})
+
+
 }

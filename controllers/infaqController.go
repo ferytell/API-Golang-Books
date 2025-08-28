@@ -10,13 +10,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateInfaq(c *gin.Context) {
-    var input struct {
+
+var input struct {
         VillagerID     *uint    `json:"villager_id"`
-        NeighborhoodID uint     `json:"neighborhood_id"`
+        NeighborhoodID string     `json:"neighborhood_id"`
         Amount         float64  `json:"amount"`
         DonatedAt      *time.Time `json:"donated_at"`
     }
+    
+// CreateInfaq godoc
+// @Summary Create a new infaq record
+// @Description Create a new infaq record
+// @Tags Infaq
+// @Accept json
+// @Produce json
+// @Param infaq body models.Infaq true "Infaq to create"
+// @Success 201 {object} models.Infaq
+// @Failure 400 {object} gin.H{"error": "Bad Request"}
+// @Failure 500 {object} gin.H{"error": "Internal Server Error"}
+// @Router /infaqs [post]
+func CreateInfaq(c *gin.Context) {
+    
 
     if err := c.ShouldBindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -24,7 +38,7 @@ func CreateInfaq(c *gin.Context) {
     }
 
     // validate neighborhood_id (must exist)
-    if input.NeighborhoodID == 0 {
+    if input.NeighborhoodID == "" {
         c.JSON(http.StatusBadRequest, gin.H{"error": "neighborhood_id is required"})
         return
     }
@@ -49,6 +63,15 @@ func CreateInfaq(c *gin.Context) {
     c.JSON(http.StatusCreated, infaq)
 }
 
+// GetInfaqs godoc
+// @Summary Get all infaq records
+// @Description Get all infaq records
+// @Tags Infaq
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Infaq
+// @Failure 500 {object} gin.H{"error": "Internal Server Error"}
+// @Router /infaqs [get]
 func GetInfaqs(c *gin.Context) {
     var infaqs []models.Infaq
     if err := initializer.DB.Find(&infaqs).Error; err != nil {
@@ -58,7 +81,17 @@ func GetInfaqs(c *gin.Context) {
     c.JSON(http.StatusOK, infaqs)
 }
 
-
+// GetInfaqByID godoc
+// @Summary Get an infaq record by ID
+// @Description Get an infaq record by ID
+// @Tags Infaq
+// @Accept json
+// @Produce json
+// @Param id path int true "Infaq ID"
+// @Success 200 {object} models.Infaq
+// @Failure 404 {object} gin.H{"error": "Infaq not found"
+// @Failure 500 {object} gin.H{"error": "Internal Server Error"}
+// @Router /infaqs/{id} [get]
 func GetInfaqByID(c *gin.Context) {
     id := c.Param("id")
     var infaq models.Infaq
@@ -71,6 +104,19 @@ func GetInfaqByID(c *gin.Context) {
     c.JSON(http.StatusOK, infaq)
 }
 
+// UpdateInfaq godoc
+// @Summary Update an infaq record
+// @Description Update an infaq record by ID
+// @Tags Infaq
+// @Accept json
+// @Produce json
+// @Param id path int true "Infaq ID"
+// @Param infaq body models.Infaq true "Infaq to update"
+// @Success 200 {object} models.Infaq
+// @Failure 400 {object} gin.H{"error": "Bad Request"}
+// @Failure 404 {object} gin.H{"error": "Infaq not found"
+// @Failure 500 {object} gin.H{"error": "Internal Server Error"}
+// @Router /infaqs/{id} [put]
 func UpdateInfaq(c *gin.Context) {
     id := c.Param("id")
     var infaq models.Infaq
@@ -80,19 +126,14 @@ func UpdateInfaq(c *gin.Context) {
         return
     }
 
-    var input struct {
-        VillagerID     *uint     `json:"villager_id"`
-        NeighborhoodID uint      `json:"neighborhood_id"`
-        Amount         float64   `json:"amount"`
-        DonatedAt      *time.Time `json:"donated_at"`
-    }
+ 
 
     if err := c.ShouldBindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
-    if input.NeighborhoodID == 0 {
+    if input.NeighborhoodID == "" {
         c.JSON(http.StatusBadRequest, gin.H{"error": "neighborhood_id is required"})
         return
     }
@@ -112,7 +153,15 @@ func UpdateInfaq(c *gin.Context) {
     c.JSON(http.StatusOK, infaq)
 }
 
-
+// DeleteInfaq godoc
+// @Summary Delete an infaq record
+// @Description Delete an infaq record by ID
+// @Tags Infaq
+// @Param id path int true "Infaq ID"
+// @Success 200 {object} gin.H{"message": "Infaq deleted successfully"
+// @Failure 404 {object} gin.H{"error": "Infaq not found"}
+// @Failure 500 {object} gin.H{"error": "Internal Server Error"}
+// @Router /infaqs/{id} [delete]
 func DeleteInfaq(c *gin.Context) {
     id := c.Param("id")
     if err := initializer.DB.Delete(&models.Infaq{}, id).Error; err != nil {
