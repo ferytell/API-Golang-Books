@@ -15,6 +15,369 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/loan_payments": {
+            "get": {
+                "description": "Retrieve all loan payments in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Get all loan payments",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.LoanPayment"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/loan_payments/{id}": {
+            "put": {
+                "description": "Update details of a specific loan payment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Update a loan payment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Payment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payment Data",
+                        "name": "payment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.LoanPayment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.LoanPayment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Record a new payment towards a loan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Create a loan payment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payment Data",
+                        "name": "payment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.LoanPayment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.LoanPayment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/loans": {
+            "get": {
+                "description": "Retrieve all loans in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "loans"
+                ],
+                "summary": "Get all loans",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Loan"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Villager requests a new loan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "loans"
+                ],
+                "summary": "Request a new loan",
+                "parameters": [
+                    {
+                        "description": "Loan Request Data",
+                        "name": "loan",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.LoanRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/loans/{id}/payment": {
+            "post": {
+                "description": "Villager makes a payment towards their loan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "loans"
+                ],
+                "summary": "Make a payment towards a loan",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payment Data",
+                        "name": "payment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "number",
+                                "format": "float64"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/loans/{id}/payments": {
+            "get": {
+                "description": "Retrieve all payments associated with a loan by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "loans"
+                ],
+                "summary": "Get payments for a specific loan",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Loan ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.LoanPayment"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/villagers": {
             "get": {
                 "description": "Retrieve a list of all villagers",
@@ -227,9 +590,129 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/villagers/{id}/loans": {
+            "get": {
+                "description": "Retrieve all loans associated with a villager by their ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "villagers"
+                ],
+                "summary": "Get loans for a specific villager",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Villager ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Loan"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "controllers.LoanRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "planned_end_date",
+                "villager_id"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "planned_end_date": {
+                    "description": "ISO date",
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "villager_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Loan": {
+            "type": "object",
+            "required": [
+                "amount"
+            ],
+            "properties": {
+                "actual_end_date": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "current_amount_paid": {
+                    "type": "number"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "planned_end_date": {
+                    "type": "string"
+                },
+                "reason": {
+                    "description": "optional",
+                    "type": "string"
+                },
+                "rest_payment": {
+                    "type": "number"
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "\"ongoing\", \"paid\", \"defaulted\"",
+                    "type": "string"
+                },
+                "total_amount_paid": {
+                    "type": "number"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "villager_id": {
+                    "description": "borrower",
+                    "type": "integer"
+                }
+            }
+        },
+        "models.LoanPayment": {
+            "type": "object"
+        },
         "models.Villager": {
             "type": "object"
         }

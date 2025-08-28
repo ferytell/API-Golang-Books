@@ -40,6 +40,13 @@ func StartServer() *gin.Engine {
 	router.PUT("/api/villagers/:id", controllers.UpdateVillager)
 	router.GET("/api/villagers/:id/loans", controllers.GetVillagerLoans)
 	router.DELETE("/api/villagers/:id", controllers.DeleteVillager)
+
+	//Infaq Routes
+	router.POST("/api/infaqs", controllers.CreateInfaq)
+	router.GET("/api/infaqs", controllers.GetInfaqs)
+	router.GET("/api/infaqs/:id", controllers.GetInfaqByID)
+	router.PUT("/api/infaqs/:id", controllers.UpdateInfaq)
+	router.DELETE("/api/infaqs/:id", controllers.DeleteInfaq)
 	
 
 	// Summary Routes

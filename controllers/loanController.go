@@ -10,10 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-
-
-
+// swagger:model LoanRequest
 type LoanRequest struct {
     VillagerID     uint    `json:"villager_id" binding:"required"`
     Amount         float64 `json:"amount" binding:"required"`
@@ -144,26 +141,7 @@ func PaymentLoan(ctx *gin.Context) {
 	})
 }
 
-// GetVillagerLoans godoc
-// @Summary Get loans for a specific villager
-// @Description Retrieve all loans associated with a villager by their ID
-// @Tags villagers
-// @Produce json
-// @Param id path int true "Villager ID"
-// @Success 200 {array} models.Loan
-// @Failure 404 {object} map[string]string
-// @Router /villagers/{id}/loans [get]
-func GetVillagerLoans(ctx *gin.Context) {
-	id := ctx.Param("id")
-	var villager models.Villager
 
-	if err := initializer.DB.Preload("Loans").First(&villager, id).Error; err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "Villager not found"})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, villager.Loans)
-}
 
 // GetAllLoans godoc
 // @Summary Get all loans

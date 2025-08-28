@@ -1,5 +1,59 @@
 basePath: /
 definitions:
+  controllers.LoanRequest:
+    properties:
+      amount:
+        type: number
+      planned_end_date:
+        description: ISO date
+        type: string
+      reason:
+        type: string
+      villager_id:
+        type: integer
+    required:
+    - amount
+    - planned_end_date
+    - villager_id
+    type: object
+  models.Loan:
+    properties:
+      actual_end_date:
+        type: string
+      amount:
+        type: number
+      created_at:
+        type: string
+      current_amount_paid:
+        type: number
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      planned_end_date:
+        type: string
+      reason:
+        description: optional
+        type: string
+      rest_payment:
+        type: number
+      start_date:
+        type: string
+      status:
+        description: '"ongoing", "paid", "defaulted"'
+        type: string
+      total_amount_paid:
+        type: number
+      updated_at:
+        type: string
+      villager_id:
+        description: borrower
+        type: integer
+    required:
+    - amount
+    type: object
+  models.LoanPayment:
+    type: object
   models.Villager:
     type: object
 host: localhost:8080
@@ -9,6 +63,247 @@ info:
   title: UEM Syariah API
   version: "1.0"
 paths:
+  /loan_payments:
+    get:
+      description: Retrieve all loan payments in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LoanPayment'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all loan payments
+      tags:
+      - payments
+  /loan_payments/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Record a new payment towards a loan
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Payment Data
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoanPayment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.LoanPayment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a loan payment
+      tags:
+      - payments
+    put:
+      consumes:
+      - application/json
+      description: Update details of a specific loan payment
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Payment Data
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoanPayment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LoanPayment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a loan payment
+      tags:
+      - payments
+  /loans:
+    get:
+      description: Retrieve all loans in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Loan'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all loans
+      tags:
+      - loans
+    post:
+      consumes:
+      - application/json
+      description: Villager requests a new loan
+      parameters:
+      - description: Loan Request Data
+        in: body
+        name: loan
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoanRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Request a new loan
+      tags:
+      - loans
+  /loans/{id}/payment:
+    post:
+      consumes:
+      - application/json
+      description: Villager makes a payment towards their loan
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Payment Data
+        in: body
+        name: payment
+        required: true
+        schema:
+          additionalProperties:
+            format: float64
+            type: number
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Make a payment towards a loan
+      tags:
+      - loans
+  /loans/{id}/payments:
+    get:
+      description: Retrieve all payments associated with a loan by its ID
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LoanPayment'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get payments for a specific loan
+      tags:
+      - loans
   /villagers:
     get:
       description: Retrieve a list of all villagers
@@ -148,6 +443,33 @@ paths:
               type: string
             type: object
       summary: Update a villager
+      tags:
+      - villagers
+  /villagers/{id}/loans:
+    get:
+      description: Retrieve all loans associated with a villager by their ID
+      parameters:
+      - description: Villager ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Loan'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get loans for a specific villager
       tags:
       - villagers
 swagger: "2.0"

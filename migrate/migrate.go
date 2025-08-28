@@ -20,6 +20,7 @@ func main() {
 	initializer.DB.AutoMigrate(&models.Villager{})
 	initializer.DB.AutoMigrate(&models.Infaq{})
 	initializer.DB.AutoMigrate(&models.Loan{})
+	initializer.DB.AutoMigrate(&models.LoanPayment{})
 	initializer.DB.AutoMigrate(&models.Repayment{})
 	initializer.DB.AutoMigrate(&models.Fund{})
 }

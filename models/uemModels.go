@@ -18,8 +18,11 @@ type Villager struct {
 
 type Infaq struct {
     gorm.Model
-    VillagerID uint    `json:"villager_id"` // who donated
+    ID             uint      `json:"id" gorm:"primaryKey"`
+    VillagerID *uint     `json:"villager_id"` // who donated
+    NeighborhoodID uint      `json:"neighborhood_id" gorm:"not null"`
     Amount     float64 `json:"amount" validate:"required"`
+    DonatedAt      time.Time `json:"donated_at"`
     CollectedAt time.Time `json:"collected_at"`
     Cuts         []DonationCut `gorm:"foreignKey:InfaqID"`
 
@@ -32,9 +35,13 @@ type DonationCut struct {
     Amount  float64
 }
 
-
+// swagger:model Loan
 type Loan struct {
-    gorm.Model
+    ID               uint      `json:"id" gorm:"primaryKey"`
+    CreatedAt        time.Time `json:"created_at"`
+    UpdatedAt        time.Time `json:"updated_at"`
+    DeletedAt        *time.Time `json:"deleted_at,omitempty" gorm:"index"`
+    
     VillagerID uint    `json:"villager_id"` // borrower
     Amount     float64 `json:"amount" validate:"required"`
     StartDate  time.Time `json:"start_date"`
