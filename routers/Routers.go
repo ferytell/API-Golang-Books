@@ -12,7 +12,7 @@ func StartServer() *gin.Engine {
 	router := gin.Default()
 
 	config := cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "https://ferytell.github.io"},
+		AllowOrigins:     []string{"http://localhost:3000", "https://testing.ferytell.site", "https://ferytell.site/"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowCredentials: true,
