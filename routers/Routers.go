@@ -3,6 +3,7 @@ package routers
 import (
 	"API-Books/controllers"
 	"API-Books/middleware"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,11 @@ func StartServer() *gin.Engine {
 	router := gin.Default()
 
 	config := cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "https://testing.ferytell.site", "https://ferytell.site/"},
+		AllowOriginFunc: func(origin string) bool {
+        return origin == "http://localhost:3000" ||
+               strings.HasPrefix(origin, "https://ferytell.site") ||
+               strings.HasPrefix(origin, "https://testing.ferytell.site")
+    	},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowCredentials: true,
