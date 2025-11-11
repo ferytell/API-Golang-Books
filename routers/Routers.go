@@ -10,19 +10,27 @@ import (
 )
 
 func StartServer() *gin.Engine {
-	router := gin.Default()
+	router := gin.New() // Use gin.New(), not gin.Default() for more control
+    router.Use(gin.Recovery())
 
-	config := cors.Config{
-		AllowOriginFunc: func(origin string) bool {
-        return origin == "http://localhost:3000" ||
-               strings.HasPrefix(origin, "https://ferytell.site") ||
-               strings.HasPrefix(origin, "https://testing.ferytell.site")
-    	},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		AllowCredentials: true,
-	}
-	router.Use(cors.New(config))
+
+	 // CORS FIRST
+    router.Use(cors.New(cors.Config{
+        AllowOriginFunc: func(origin string) bool {
+            return origin == "http://localhost:3000" ||
+                   strings.HasPrefix(origin, "https://ferytell.site") ||
+                   strings.HasPrefix(origin, "https://testing.ferytell.site")
+        },
+        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+        AllowCredentials: true,
+        MaxAge:           12 * time.Hour,
+    }))
+
+    // Then logger (optional)
+    router.Use(gin.Logger())
+
+	//router.Use(cors.New(config))
 
 	router.GET("/api/ping", controllers.Hellow)
 	// User Auth Routes
