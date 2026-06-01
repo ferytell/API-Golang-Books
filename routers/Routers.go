@@ -61,7 +61,11 @@ func StartServer() *gin.Engine {
 	router.GET("/api/infaqs/:id", controllers.GetInfaqByID)
 	router.PUT("/api/infaqs/:id", controllers.UpdateInfaq)
 	router.DELETE("/api/infaqs/:id", controllers.DeleteInfaq)
-	
+	//router.POST("/api/infaqs/batch", controllers.CreateInfaqBatch)
+	router.GET("/api/infaqs/weekly/:year/:week", controllers.GetInfaqsByWeek)
+	//router.GET("/api/infaqs/resident/:id/history", controllers.GetResidentInfaqHistory)
+
+
 
 	// Summary Routes
 	router.GET("/api/summary/infaq/week", controllers.GetInfaqSummaryByWeek)
@@ -72,12 +76,28 @@ func StartServer() *gin.Engine {
 	router.POST("/api/loans", controllers.RequestLoan)
 	router.POST("/api/loans/batch", controllers.PaymentLoan)
 	router.GET("/api/loans", controllers.GetAllLoans)
-	
+
 	// Payment Routes
 	router.POST("/api/loan_payments", controllers.CreatePayment)
 	router.PUT("/api/loan_payments/:id", controllers.UpdatePayment)
 	router.GET("/api/loan_payments", controllers.GetAllPayments)
 	router.GET("/api/loan_payments/:id", controllers.GetVillagersWithLoans)
+
+	// Cash Book Routes
+	// router.GET("/api/cashbook/:year/:month", controllers.GetMonthlyCashBook)
+	// router.POST("/api/cashbook/entries", controllers.CreateCashBookEntry)
+
+	// Report Routes
+	router.GET("/api/reports/monthly/:year/:month", controllers.GenerateMonthlyReport)
+	router.GET("/api/reports/semester/:year/:semester", controllers.GenerateSemesterReport)
+
+	// Dashboard
+	// router.GET("/api/dashboard", controllers.GetDashboardSummary)
+	// router.GET("/api/dashboard/loan-stats", controllers.GetLoanStatistics)
+
+	// Loan Card
+	// router.GET("/api/loans/:id/card", controllers.GenerateLoanCard)
+	// router.POST("/api/loans/:id/card/print", controllers.PrintLoanCard)
 
 
 	return router
