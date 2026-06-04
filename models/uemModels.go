@@ -53,40 +53,37 @@ type Infaq struct {
     Year           int       `json:"year"`
     CollectedAt    time.Time `json:"collected_at"`
     Cuts           []DonationCut `gorm:"foreignKey:InfaqID"`
-}
-
-type DonationCut struct {
-    gorm.Model
-    InfaqID uint
-    Purpose string  // e.g. "transportation", "admission"
-    Amount  float64
+	Notes          string    `json:"notes"`
 }
 
 // swagger:model Loan
 type Loan struct {
-    ID               uint      `json:"id" gorm:"primaryKey"`
+	gorm.Model
+	ID               uint      `json:"id" gorm:"primaryKey"`
     CreatedAt        time.Time `json:"created_at"`
     UpdatedAt        time.Time `json:"updated_at"`
     DeletedAt        *time.Time `json:"deleted_at,omitempty" gorm:"index"`
-    
-    VillagerID uint    `json:"villager_id"` // borrower
-    Amount     float64 `json:"amount" validate:"required"`
-    StartDate  time.Time `json:"start_date"`
-    ActualEndDate *time.Time `json:"actual_end_date"`
-    PlannedEndDate   time.Time `json:"planned_end_date"`
-    TotalAmountPaid float64   `json:"total_amount_paid"`
-    CurrentAmountPaid float64   `json:"current_amount_paid"`
-    RestPayment    float64   `json:"rest_payment"`
-    Reason         string    `json:"reason"` // optional
-    Status     string    `json:"status"` // "ongoing", "paid", "defaulted"
+
+	VillagerID        uint       `json:"villager_id"          gorm:"not null;index"  validate:"required"`
+	Amount            float64    `json:"amount"               gorm:"not null"        validate:"required,gt=0"`
+	StartDate         time.Time  `json:"start_date"`
+	PlannedEndDate    time.Time  `json:"planned_end_date"`
+	ActualEndDate     *time.Time `json:"actual_end_date,omitempty"`
+	TotalAmountPaid   float64    `json:"total_amount_paid"    gorm:"default:0"`
+	CurrentAmountPaid float64    `json:"current_amount_paid"  gorm:"default:0"`
+	RestPayment       float64    `json:"rest_payment"         gorm:"default:0"`
+	Reason            string     `json:"reason"`
+	Notes             string     `json:"notes"`
+	// Status: "ongoing", "paid", "defaulted"
+	Status            string     `json:"status"               gorm:"default:'ongoing';index"`
+
+	// Associations (loaded only when Preloaded)
+	Villager  *Villager    `json:"villager,omitempty"  gorm:"foreignKey:VillagerID"`
+	Payments  []LoanPayment `json:"payments,omitempty" gorm:"foreignKey:LoanID"`
 }
 
-type LoanPayment struct {
-    gorm.Model
-    LoanID   uint      `json:"loan_id"`
-    Amount   float64   `json:"amount"`
-    PaidAt   time.Time `json:"paid_at"`
-}
+
+
 
 type Committee struct {
     gorm.Model
@@ -255,4 +252,24 @@ type BeneficiaryStatistics struct {
 	ByRT3               int `json:"by_rt3"`
 	CompletedBorrowers  int64 `json:"completed_borrowers"`
 	ActiveBorrowers     int64 `json:"active_borrowers"`
+}
+
+
+type DonationCut struct {
+	gorm.Model
+	InfaqID uint    `json:"infaq_id" gorm:"not null;index"`
+	Purpose string  `json:"purpose"`  // "dkm", "operasional", "pengurus"
+	Amount  float64 `json:"amount"`
+}
+
+// Loan represents an interest-free loan (pinjaman tanpa bunga)
+
+// LoanPayment records each weekly / partial repayment
+type LoanPayment struct {
+	gorm.Model
+	LoanID    uint      `json:"loan_id"    gorm:"not null;index" validate:"required"`
+	Amount    float64   `json:"amount"     gorm:"not null"       validate:"required,gt=0"`
+	PaidAt    time.Time `json:"paid_at"`
+	WeekLabel string    `json:"week_label"` // e.g. "Minggu 1", "Minggu 2"
+	Notes     string    `json:"notes"`
 }
