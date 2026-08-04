@@ -19,8 +19,8 @@ func StartServer() *gin.Engine {
     router.Use(cors.New(cors.Config{
         AllowOriginFunc: func(origin string) bool {
             return origin == "http://localhost:3000" ||
-                   strings.HasPrefix(origin, "https://ferytell.site") ||
-                   strings.HasPrefix(origin, "https://testing.ferytell.site")
+                   strings.HasPrefix(origin, "https://ferytell.online") ||
+                   strings.HasPrefix(origin, "https://ippeba.ferytell.online")
         },
         AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
         AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},

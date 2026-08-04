@@ -128,7 +128,7 @@ func Login(ctx *gin.Context) {
     tokenString,
     3600*24*10,   // 10 day
     "/",       // path
-    "golangbook.ferytell.site", // domain (important!)
+    "golangbook.ferytell.online", // domain (important!)
     true,      // secure (must be true for SameSite=None)
     true,      // httpOnly
 )
@@ -150,7 +150,7 @@ func Validate(ctx *gin.Context) {
 func Logout(ctx *gin.Context) {
 	// set expiration time to a past time
 	//ctx.SetCookie("Authorization", "", -1, "/", "", false, true)
-	ctx.SetCookie("Authorization", "", -1, "/", "golangbook.ferytell.site", true, true)
+	ctx.SetCookie("Authorization", "", -1, "/", "golangbook.ferytell.online", true, true)
 
 
 	ctx.JSON(http.StatusOK, gin.H{
