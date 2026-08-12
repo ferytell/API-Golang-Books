@@ -3,7 +3,6 @@ package routers
 import (
 	"API-Books/controllers"
 	"API-Books/middleware"
-	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -17,13 +16,19 @@ func StartServer() *gin.Engine {
 
 	 // CORS FIRST
     router.Use(cors.New(cors.Config{
-        AllowOriginFunc: func(origin string) bool {
-            return origin == "http://localhost:3000" ||
-                   strings.HasPrefix(origin, "https://ferytell.online") ||
-                   strings.HasPrefix(origin, "https://ippeba.ferytell.online")
+        // AllowOriginFunc: func(origin string) bool {
+        //     return origin == "http://localhost:3000" ||
+		// 	       strings.HasPrefix(origin, "https://ippeba.ferytell.online") ||
+        //            strings.HasPrefix(origin, "https://ferytell.online")	
+        // },
+		AllowOrigins:     []string{
+            "http://localhost:3000",
+            "https://ferytell.online",
+            "https://ippeba.ferytell.online",
         },
+
         AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
         AllowCredentials: true,
         MaxAge:           12 * time.Hour,
     }))
