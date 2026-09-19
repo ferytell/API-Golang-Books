@@ -11,30 +11,32 @@ import (
 
 func StartServer() *gin.Engine {
 	router := gin.New() // Use gin.New(), not gin.Default() for more control
-    router.Use(gin.Recovery())
+	router.Use(gin.Recovery())
 
-
-	 // CORS FIRST
-    router.Use(cors.New(cors.Config{
-        // AllowOriginFunc: func(origin string) bool {
-        //     return origin == "http://localhost:3000" ||
+	// CORS FIRST
+	router.Use(cors.New(cors.Config{
+		// AllowOriginFunc: func(origin string) bool {
+		//     return origin == "http://localhost:3000" ||
 		// 	       strings.HasPrefix(origin, "https://ippeba.ferytell.online") ||
-        //            strings.HasPrefix(origin, "https://ferytell.online")	
-        // },
-		AllowOrigins:     []string{
-            "http://localhost:3000",
-            "https://ferytell.online",
-            "https://ippeba.ferytell.online",
-        },
+		//            strings.HasPrefix(origin, "https://ferytell.online")
+		// },
+		AllowOriginFunc: func(origin string) bool {
+			switch origin {
+			case "http://localhost:3000", "http://localhost:5173", "https://ferytell.online", "https://ippeba.ferytell.online":
+				return true
+			default:
+				return false
+			}
+		},
 
-        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
-        AllowCredentials: true,
-        MaxAge:           12 * time.Hour,
-    }))
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
-    // Then logger (optional)
-    router.Use(gin.Logger())
+	// Then logger (optional)
+	router.Use(gin.Logger())
 
 	//router.Use(cors.New(config))
 
@@ -70,8 +72,6 @@ func StartServer() *gin.Engine {
 	router.GET("/api/infaqs/weekly/:year/:week", controllers.GetInfaqsByWeek)
 	//router.GET("/api/infaqs/resident/:id/history", controllers.GetResidentInfaqHistory)
 
-
-
 	// Summary Routes
 	router.GET("/api/summary/infaq/week", controllers.GetInfaqSummaryByWeek)
 	router.GET("/api/summary/infaq/month", controllers.GetInfaqSummaryByMonth)
@@ -103,7 +103,6 @@ func StartServer() *gin.Engine {
 	// Loan Card
 	// router.GET("/api/loans/:id/card", controllers.GenerateLoanCard)
 	// router.POST("/api/loans/:id/card/print", controllers.PrintLoanCard)
-
 
 	return router
 }
